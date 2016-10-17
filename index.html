@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	<title>Geolocation demo</title>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.26.0/mapbox-gl.css' rel='stylesheet' />
+    <!-- Mapbox Geocoder -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v1.3.1/mapbox-gl-geocoder.js'></script>
+    <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v1.3.1/mapbox-gl-geocoder.css' type='text/css' />
+</head>
+<body>
+<div class="map"></div>
+
+<script>
+
+	mapboxgl.accessToken = 'pk.eyJ1IjoiYW5uYWJpYWxhcyIsImEiOiJjaWh3bzVybjUwMm92dGZraHFwcnY4bG16In0.j2Sl8c2UoLY_yHBjO1vAfQ';
+		var map = new mapboxgl.Map({
+		    container: 'map',
+		    style: 'mapbox://styles/mapbox/streets-v9',
+		    center: [-73.985, 40.745],
+		    zoom: 12
+		});
+
+	map.addControl(new mapboxgl.Geocoder());
+	map.addControl(new mapboxgl.NavigationControl());
+
+	// Geolocation via https://developer.mozilla.org/en-US/docs/Web/API/Geolocation/Using_geolocation#Prompting_for_permission :
+
+	function locateMe() { 
+
+		if (!navigator.geolocation) {
+    		console.log("Geolocation not supported by browser");
+    		return;
+  		};
+
+		function success(position) {
+
+			var lon = position.coords.longitude;
+			var lat = position.coords.latitude;
+
+			map.flyTo({ 
+				center: [lon, lat],
+				zoom: 15
+			});
+		};
+
+		function error() {
+    		console.log("Geolocation disabled");
+  		};	
+
+		navigator.geolocation.getCurrentPosition(success, error);
+	};
+
+	window.onload = locateMe();
+
+</script>
+</body>
+</html>
